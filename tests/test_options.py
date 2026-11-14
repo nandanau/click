@@ -1005,6 +1005,17 @@ def test_show_envvar_auto_prefix(runner):
     assert "TEST_ARG1" in result.output
 
 
+def test_show_envvar_auto_prefix_error_hint(runner):
+    @click.command(context_settings={"auto_envvar_prefix": "MYAPP"})
+    @click.option("--port", type=int, required=True, show_envvar=True)
+    def cmd(port):
+        pass
+
+    result = runner.invoke(cmd, [])
+    assert result.exit_code == 2
+    assert "MYAPP_PORT" in result.output
+
+
 def test_show_envvar_auto_prefix_dash_in_command(runner):
     @click.group()
     def cli():
